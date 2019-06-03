@@ -1,210 +1,175 @@
 #include <iostream>
 #include <vector>
+#include <math.h>
+#include <string>
 
 using namespace std;
+#define tam 16
 
 
-#define MAX 255
-#define tam_instrucao 10
-#define tam_opcode 6
-#define tam_total 16
-
-class CPU{
-
-public:
-    enum {
-        LOAD_MQ,
-        LOAD_MQ_X,
-        STOR,
-        LOAD_X,
-        ADD_X,
-        SUB_X,
-        MUL_X,
-        DIV_X
-    };
-
-private:
-    char MQ[tam_instrucao];
-    char AC[tam_instrucao];
-    char R0[tam_instrucao]; // registrador auxiliar
-    char PC[tam_instrucao];
-    char IR[tam_total];
-
-    // Ainda sem saber onde usar MBR e MAR
-    char MBR[tam_instrucao];
-    char MAR[tam_instrucao];
-
-    // Transfere o conteúdo do MQ para AC
-    void LOADMQ(){
-        transferir(AC,MQ);
-    }
-
-    // Tranfere o conteúdo da memória no endereço X para MQ
-    // memoria[] é pra ser um vetor de char que será passada para
-    // que seja acessada a sua posição x
-    void LOADMQX(char *x[], char *memoria[]){
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        //Transfere o conteúdo de R0 para MQ
-        transferir(R0, MQ);
-
-    }
-
-    //Transfere o conteúdo de AC para o local X da memória
-    void STORX(char *x[], char *memoria[]){
-
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        transferir(R0, AC);
-
-    }
-
-    //Transfere conteúdo do local X da memória para AC
-    void LOADX(char *x[], char *memoria[]){
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        transferir(AC, R0);
-    }
-
-    //Soma o conteúdo da memória no endereço X
-    // com AC. O resultado é gravado em AC.
-    void ADDX(char *x[], char *memoria[]){
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        //converte AC e R0 para decimal para somar
-        // AC_decimal = converterBinarioDecimal(AC)
-        // R0_decimal = converterBinarioDecimal(R0)
-        // float soma = AC_decimal + R0_decimal
-
-        // if(soma > 255){ erro() }
-        // else { AC = converterDecimalBinario(soma)}
-
-    }
-
-    //Subtrai o conteúdo da memória no endereço X com AC
-    // O resultado é gravado em AC
-    void SUBX(char *x[], char *memoria[]){
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        //converte AC e R0 para decimal para subtrair
-        // AC_decimal = converterBinarioDecimal(AC)
-        // R0_decimal = converterBinarioDecimal(R0)
-        // float sub = R0_decimal - AC_decimal
-
-        // if(soma < 0){ erro() }
-        // else { AC = converterDecimalBinario(sub)}
-
-    }
+vector<string> MAR;
+vector<string> MBR;
+vector<string> IR;
+vector<string> MQ;
+vector<string> AC;
+vector<string> PC;
+vector<string> OPCODE;
 
 
-    //Multiplica o conteúdo da memória que está no endereço X por MQ.
-    // Bits mais significativos em AC e menos significativos em MQ
-    void MULX(char *x[], char *memoria[]){
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        //converte MQ e R0 para decimal para subtrair
-        // MQ_decimal = converterBinarioDecimal(MQ)
-        // R0_decimal = converterBinarioDecimal(R0)
-    }
-
-    //Divide AC pelo conteúdo da memória no endereço X.
-    // Quociente fica em MQ e o resto em AC
-    void DIVX(char *x[], char *memoria[]){
-        //converte o endereço X para decimal
-        // x_decimal = converterBinarioDecimal(x);
-
-        // Acessa a memória na posicao X e colocar o valor
-        // em um registrador auxiliar R0
-        // R0 = memoria[x_decimal]
-
-        //converte AC e R0 para decimal para subtrair
-        // AC_decimal = converterBinarioDecimal(AC)
-        // R0_decimal = converterBinarioDecimal(R0)
-    }
+vector<vector<string>> memoria;
+vector<string> word;
 
 
-    void erro(){
-        cout << "Erro!";
-    }
-
-    //transfere dado para dado1
-    void transferir(char *dado1[], char *dado2[]){
-        for(int i=0; i<tam_instrucao;i++){
-            dado1[i] = dado2[i];
-        }
-    }
+class Processador{
 
 public:
-    // Execucao() recebe como parâmetro o programa, que se refere à sequência
-    // intruções que serão executadas
-    void Execucao(vector<char> *programa){
 
-        while(converteBinarioDecimal(PC) < programa.size()){
+    void cicloDeBusca(){
+       // MAR <- PC
+       if(MAR.size() == 1){
+           MAR.pop_back();
+       }
+        MAR.push_back(PC[0]);
 
-            IR = programa[converteBinarioDecimal(PC)];
-            // PC++ => o valor de PC em decimal é incrementado e depois convetido para binário
-            // separa a parte da instrução de IR => "instrucao = IR[7:16]"
-            switch (IR) {
-            case LOAD_MQ:
-                LOADMQ();
-                break;
-            case LOAD_MQ_X:
-                LOADMQX(instrucao, memoria);
-                break;
-            case STOR:
-                STORX(instrucao, memoria);
-                break;
-            case LOAD_X:
-                LOADX(instrucao, memoria);
-                break;
-            case ADD_X:
-                ADDX(instrucao, memoria);
-                break;
-            case SUB_X:
-                SUBX(instrucao, memoria);
-                break;
-            case MUL_X:
-                MULX(instrucao, memoria);
-                break;
-            case DIV_X:
-                DIVX(instrucao, memoria);
-                break;
-            default:
-                erro();
-                break;
-            }
+        //MBR <- memoria[MAR][]
+        int mar = converterBinarioDecimal(MAR, 16);
+        vector<string> inst = memoria[mar];
 
+        if(MBR.size() == 1){
+            MBR.pop_back();
         }
+        MBR.push_back(inst[0]);
+
+        //IR <-MBR
+        if(IR.size() == 1){
+            IR.pop_back();
+        }
+        IR.push_back(MBR[0]);
+
+        //OPCODE <- IR[0:6]
+        if(OPCODE.size() == 1){
+            OPCODE.pop_back();
+        }
+
+        string concatenar;
+        for(int i =0; i<6;i++){
+            concatenar += IR[0][i];
+        }
+
+        OPCODE.push_back(concatenar);
+
+        //MAR <- IR[7:16]
+        if(MAR.size() == 1){
+            MAR.pop_back();
+        }
+
+        string concatenar2;
+        for(int i=0; i<6;i++){
+            concatenar2 += '0';
+        }
+        for(int i =6; i<16;i++){
+            concatenar2 += IR[0][i];
+        }
+
+        MAR.push_back(concatenar2);
+    }
+
+    void cicloDeExecucao(){
+
+        int opcode = converterBinarioDecimal(OPCODE,6);
+
+        switch (opcode) {
+        case 10:
+            cout << "loadMQ" << endl;
+            loadMQ();
+            break;
+        case 9:
+            cout << "loadMQX" << endl;
+            loadMQX();
+            break;
+        case 33:
+            cout << "storX" << endl;
+            storX();
+            break;
+        case 1:
+            cout << "loadX" << endl;
+        //    loadX();
+            break;
+        case 5:
+            cout << "addX" << endl;
+
+        //    addX();
+            break;
+        case 6:
+            cout << "subX" << endl;
+
+        //    subX();
+            break;
+        case 11:
+            cout << "mulX" << endl;
+
+        //    mulX();
+            break;
+        case 12:
+            cout << "divX" << endl;
+
+        //    divX();
+            break;
+        default:
+            cout<<"ERRO!!!"<< endl;
+            break;
+        }
+
+    }
+
+    int converterBinarioDecimal(vector<string> &v, int n){
+
+        int i,j, soma=0;
+
+        for(i=n-1,j=0;i>=0;i--,j++){
+            soma += (int)(v[0][i] - 48)*pow(2,j);
+        }
+        return soma;
+    }
+
+
+    // Conjunto de instruções
+
+    void loadMQ(){
+
+        if(AC.size() == 1){
+            AC.pop_back();
+        }
+        AC.push_back(MQ[0]);
+    }
+
+    void loadMQX(){
+
+        int mar = converterBinarioDecimal(MAR, 16);
+        vector<string> inst = memoria[mar];
+
+        if(MBR.size() == 1){
+            MBR.pop_back();
+        }
+
+        MBR.push_back(inst[0]);
+
+        if(MQ.size() == 1){
+            MQ.pop_back();
+        }
+
+        MQ.push_back(MBR[0]);
+    }
+
+    void storX(){
+
+        int mar = converterBinarioDecimal(MAR, 16);
+
+        if(AC.size() == 1){
+            AC.pop_back();
+        }
+
+        AC.push_back(memoria[mar][0]);
     }
 
 };
@@ -212,22 +177,16 @@ public:
 int main()
 {
 
-    CPU *cpu = new CPU();
+    word.push_back("0010010000000000");
+    memoria.push_back(word);
 
-    // --- Exemplo do código usado como base para a implementação ----
+    Processador *cpu = new Processador;
 
-    //     vector<byte> inst;
-
-    //     inst.push_back(CPU::LOAD0);
-    //     inst.push_back(0);
-    //     inst.push_back(CPU::LOAD1);
-    //     inst.push_back(7);
-    //     inst.push_back(CPU::ADD);
-    //     inst.push_back(CPU::STORE0);
-    //     inst.push_back(255);
+    PC.push_back("0000000000000000");
 
 
-    delete cpu;
+    cpu->cicloDeBusca();
+    cpu->cicloDeExecucao();
 
     return 0;
 }
