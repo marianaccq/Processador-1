@@ -98,12 +98,12 @@ public:
         case 5:
             cout << "addX" << endl;
 
-        //    addX();
+            addX();
             break;
         case 6:
             cout << "subX" << endl;
 
-        //    subX();
+            subX();
             break;
         case 11:
             cout << "mulX" << endl;
@@ -170,6 +170,74 @@ public:
         }
 
         AC.push_back(memoria[mar][0]);
+    }
+
+    void loadX(){
+
+
+    }
+    void addX(){
+
+        int mar = converterBinarioDecimal(MAR, 16);
+        vector<string> inst = memoria[mar];
+
+        if(MBR.size() == 1){
+            MBR.pop_back();
+        }
+        //MBR <- MEMORIA[MAR]
+        MBR.push_back(inst[0]);
+
+        //RT <- AC
+        vector<string> reg_temp;
+
+        if(reg_temp.size() == 1){
+            reg_temp.pop_back();
+        }
+        reg_temp.push_back(AC);
+
+        //AC<-RT+MBR
+        if(AC.size() == 1){
+            AC.pop_back();
+        }
+
+        AC.push_back(reg_temp[0]+MBR[0]);
+
+    }
+    void subX(){
+
+        int mar = converterBinarioDecimal(MAR, 16);
+        vector<string> inst = memoria[mar];
+
+        if(MBR.size() == 1){
+            MBR.pop_back();
+        }
+        //MBR <- MEMORIA[MAR]
+        MBR.push_back(inst[0]);
+
+        //RT <- AC
+        vector<string> reg_temp;
+
+        if(reg_temp.size() == 1){
+            reg_temp.pop_back();
+        }
+        reg_temp.push_back(AC);
+
+        //AC<-RT-MBR
+        if(AC.size() == 1){
+            AC.pop_back();
+        }
+
+        AC.push_back(reg_temp[0]-MBR[0]);
+
+    }
+
+    void mulX(){
+
+        int mar = converterBinarioDecimal(MAR, 16);
+        vector<string> inst = memoria[mar];
+    }
+
+    void divX(){
     }
 
 };
