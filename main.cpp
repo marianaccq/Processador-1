@@ -130,6 +130,26 @@ public:
         return soma;
     }
     
+    void converterDecimalBinario(int num){
+        int temp[10],bin[10];
+        int aux;
+
+        for (aux = 10; aux >= 0; aux--) {
+            if (num % 2 == 0) {
+                temp[aux] = 0;
+                num = num / 2;
+            }
+            else {
+                temp[aux] = 1;
+                num = num / 2;
+            }
+        }
+
+        for (aux = 0; aux <= 10; aux++) {
+            bin[i]=temp[aux];
+            i++;
+        }
+}
 
     // Conjunto de instruções
     
