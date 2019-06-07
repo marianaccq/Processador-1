@@ -93,14 +93,16 @@ public:
             break;
         case 1:
             cout << "loadX" << endl;
-            loadX();
+        //    loadX();
             break;
         case 5:
             cout << "addX" << endl;
+
             addX();
             break;
         case 6:
             cout << "subX" << endl;
+
             subX();
             break;
         case 11:
@@ -129,21 +131,10 @@ public:
         }
         return soma;
     }
-    
+
 
     // Conjunto de instruções
-    
-    void loadX(){
-        
-        int mar = converterBinarioDecimal(MAR, 16);
-        vector<string> inst = memoria[mar];
-        
-        if(AC.size() == 1){
-            AC.pop_back();
-        }
-        AC.push_back(inst[0]);
-        
-    }
+
     void loadMQ(){
 
         if(AC.size() == 1){
@@ -181,6 +172,10 @@ public:
         AC.push_back(memoria[mar][0]);
     }
 
+    void loadX(){
+
+
+    }
     void addX(){
 
         int mar = converterBinarioDecimal(MAR, 16);
@@ -205,7 +200,12 @@ public:
             AC.pop_back();
         }
 
-        AC.push_back(reg_temp[0]+MBR[0]);
+        int rt = converterBinarioDecimal(reg_temp, 16);
+        int mbr = converterBinarioDecimal(MBR, 16);
+        int soma = rt+mbr;
+        // aqui precisa usar a função converter soma p binário
+        
+        AC.push_back(resultado);
 
     }
     void subX(){
@@ -227,12 +227,17 @@ public:
         }
         reg_temp.push_back(AC);
 
-        //AC <- RT-MBR
+        //AC<-RT-MBR
         if(AC.size() == 1){
             AC.pop_back();
         }
-
-        AC.push_back(reg_temp[0]-MBR[0]);
+        
+        int rt = converterBinarioDecimal(reg_temp, 16);
+        int mbr = converterBinarioDecimal(MBR, 16);
+        int sub = rt-mbr;
+        // aqui precisa usar a função converter sub p binário
+        
+        AC.push_back(resultado);
 
     }
 
@@ -249,9 +254,68 @@ public:
 
 int main()
 {
-
-    word.push_back("0010010000000000");
+    //LOAD MQ, 22
+    word.push_back("0010010000010110");
     memoria.push_back(word);
+    //MUL 21
+    word.push_back("0010110000010101");
+    memoria.push_back(word);
+    //LOAD MQ
+    word.push_back("0010100000000000");
+    memoria.push_back(word);
+    //ADD 20
+    word.push_back("0001010000010100");
+    memoria.push_back(word);
+    //STOR 27
+    word.push_back("1000010000011011");
+    memoria.push_back(word);
+    //LOAD MQ, 24
+    word.push_back("0010100000011000");
+    memoria.push_back(word);
+    //MUL 25
+    word.push_back("0010110000011001");
+    memoria.push_back(word);
+     //LOAD MQ
+    word.push_back("0010100000000000");
+    memoria.push_back(word);
+    //STOR 28
+    word.push_back("1000010000011100");
+    memoria.push_back(word);
+    //LOAD 23
+    word.push_back("0000010000010111");
+    memoria.push_back(word);
+    //SUB 28
+    word.push_back("0001100000011100");
+    memoria.push_back(word);
+    //STOR 29
+    word.push_back("1000010000011101");
+    memoria.push_back(word);
+    //LOAD 23
+    word.push_back("0000010000010111");
+    memoria.push_back(word);
+    //SUB 28
+    word.push_back("0011000000000000");
+    memoria.push_back(word);
+    //STOR 29
+    word.push_back("0011000000000000");
+    memoria.push_back(word);
+    //LOAD 27
+    word.push_back("0000010000000000");
+    memoria.push_back(word);
+    //DIV 29
+    word.push_back("0011000000011101");
+    memoria.push_back(word);
+    //STOR 27
+    word.push_back("1000010000011011");
+    memoria.push_back(word);
+    //LOAD MQ
+    word.push_back("0010100000000000");
+    memoria.push_back(word);
+    //STOR 26
+    word.push_back("1000010000011010");
+    memoria.push_back(word);
+
+
 
     Processador *cpu = new Processador;
 
