@@ -93,21 +93,18 @@ public:
             break;
         case 1:
             cout << "loadX" << endl;
-        //    loadX();
+            loadX();
             break;
         case 5:
             cout << "addX" << endl;
-
             addX();
             break;
         case 6:
             cout << "subX" << endl;
-
             subX();
             break;
         case 11:
             cout << "mulX" << endl;
-
         //    mulX();
             break;
         case 12:
@@ -134,6 +131,18 @@ public:
 
 
     // Conjunto de instruções
+    
+     void loadX(){
+
+        int mar = converterBinarioDecimal(MAR, 16);
+        vector<string> inst = memoria[mar];
+
+        if(AC.size() == 1){
+            AC.pop_back();
+        }
+        AC.push_back(inst[0]);
+
+    }
 
     void loadMQ(){
 
@@ -239,15 +248,6 @@ public:
         
         AC.push_back(resultado);
 
-    }
-
-    void mulX(){
-
-        int mar = converterBinarioDecimal(MAR, 16);
-        vector<string> inst = memoria[mar];
-    }
-
-    void divX(){
     }
 
 };
