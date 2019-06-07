@@ -212,7 +212,7 @@ public:
         int rt = converterBinarioDecimal(reg_temp, 16);
         int mbr = converterBinarioDecimal(MBR, 16);
         int soma = rt+mbr;
-        // aqui precisa usar a função converter soma p binário
+        vector <string> resultado = converterDecimalBinarioString(soma);
         
         AC.push_back(resultado);
 
@@ -244,7 +244,7 @@ public:
         int rt = converterBinarioDecimal(reg_temp, 16);
         int mbr = converterBinarioDecimal(MBR, 16);
         int sub = rt-mbr;
-        // aqui precisa usar a função converter sub p binário
+        vector <string> resultado = converterDecimalBinarioString(sub);
         
         AC.push_back(resultado);
 
